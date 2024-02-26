@@ -17,39 +17,20 @@
         </div>
     </section>
     <section class="content">
+        @if(session()->has('success'))
+        <p class="text-danger text-center">{{session()->get('success')}}</p>
+        @endif
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title nofloat"> <span>{{ $common['heading_title']}} </span>
-                                <a href="{{ url('admin/trips')}}">
-                                    <button onClick="back();"
-                                        class="btn btn-primary waves-effect waves-light f-right d-inline-block md-trigger"
-                                        data-modal="modal-13" style="float: right"> <i
-                                            class="fa-solid fa-backward"></i>&nbsp;&nbsp; Back
-                                    </button>
-                                </a>
-                            </h3>
+                            <h3 class="card-title nofloat"> <span>{{ $common['heading_title']}} </span></h3>
                         </div>
                         <div class="card-body">
                             <form name="TripDetailForm" id="main" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
-                                    {{-- <div class="col-md-6">
-                                        <div class="form-group mb-3 {{ $errors->has('client_name') ? 'has-danger' : '' }}">
-                                            <label class="col-form-label">Client Name*</label>
-                                            <input
-                                                class="form-control {{ $errors->has('client_name') ? 'form-control-danger' : '' }}"
-                                                name="client_name" type="text" value="{{ old('client_name') }}"
-                                                placeholder="Enter client name">
-                                            @error('client_name')
-                                            <div class="col-form-alert-label">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                    </div> --}}
                                     <div class="col-md-6">
                                         <div class="form-group mb-3 {{ $errors->has('name') ? 'has-danger' : '' }}">
                                             <label class="col-form-label">Customer Name*</label>
@@ -69,7 +50,7 @@
                                             <label class="col-form-label">Trip Cost (paid by client)*</label>
                                             <input
                                                 class="form-control {{ $errors->has('revenue') ? 'form-control-danger' : '' }}"
-                                                name="revenue" type="text" value="{{ old('revenue') }}"
+                                                name="revenue" type="number" value="{{ old('revenue') }}"
                                                 placeholder="Enter revenue">
                                             @error('revenue')
                                             <div class="col-form-alert-label">
@@ -83,15 +64,19 @@
                                             class="form-group mb-3 {{ $errors->has('loading_location') ? 'has-danger' : '' }}">
                                             <label class="col-form-label">Loading Location*</label>
                                             <input
-                                                class="form-control {{ $errors->has('loading_location') ? 'form-control-danger' : '' }}"
+                                                class="form-control controls {{ $errors->has('loading_location') ? 'form-control-danger' : '' }}"
                                                 name="loading_location" type="text"
                                                 value="{{ old('loading_location') }}"
+                                                 id="pac-input"
                                                 placeholder="Enter loading location">
                                             @error('loading_location')
                                             <div class="col-form-alert-label">
                                                 {{ $message }}
                                             </div>
                                             @enderror
+                                            <input type="hidden" name="lat" id="lat"/>
+                                            <input type="hidden" name="lng" id="lng"/>
+                                            <!--<div id="map"></div>-->
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -102,12 +87,15 @@
                                                 class="form-control {{ $errors->has('offloading_location') ? 'form-control-danger' : '' }}"
                                                 name="offloading_location" type="text"
                                                 value="{{ old('offloading_location') }}"
+                                                 id="pac-input1"
                                                 placeholder="Enter loading location">
                                             @error('offloading_location')
                                             <div class="col-form-alert-label">
                                                 {{ $message }}
                                             </div>
                                             @enderror
+                                            <input type="hidden" name="offloading_location_lat" id="offloading_location_lat"/>
+                                            <input type="hidden" name="offloading_location_lng" id="offloading_location_lng"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -137,7 +125,6 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    
                                     <div class="col-md-6">
                                         <div
                                             class="form-group mb-3 {{ $errors->has('type_of_cargo') ? 'has-danger' : '' }}">
@@ -153,14 +140,13 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    
                                     <div class="col-md-6">
                                         <div
                                             class="form-group mb-3 {{ $errors->has('weight_of_cargo') ? 'has-danger' : '' }}">
                                             <label class="col-form-label">Weight of Cargo*</label>
                                             <input
                                                 class="form-control {{ $errors->has('weight_of_cargo') ? 'form-control-danger' : '' }}"
-                                                name="weight_of_cargo" type="text" value="{{ old('weight_of_cargo') }}"
+                                                name="weight_of_cargo" type="number" value="{{ old('weight_of_cargo') }}"
                                                 placeholder="Enter cargo weight">
                                             @error('weight_of_cargo')
                                             <div class="col-form-alert-label">
@@ -175,7 +161,7 @@
                                             <label class="col-form-label">Initial Diesel*</label>
                                             <input
                                                 class="form-control {{ $errors->has('initial_diesel') ? 'form-control-danger' : '' }}"
-                                                name="initial_diesel" type="text" value="{{ old('initial_diesel') }}"
+                                                name="initial_diesel" type="number" value="{{ old('initial_diesel') }}"
                                                 placeholder="Enter initial diesel">
                                             @error('initial_diesel')
                                             <div class="col-form-alert-label">
@@ -192,7 +178,7 @@
                                                     <select class="form-control" id="mileage_currency" name="mileage_currency">
                                                         <option value="">Select</option>
                                                         @foreach($get_currency as $key => $value)
-                                                        <option value="{{ $value['id']}}">{{ $value['name']}}</option>
+                                                        <option value="{{ $value['id']}}" {{ $key==0 ? 'selected':''}}>{{ $value['name']}}</option>
                                                         @endforeach
                                                     </select>
                                             </div>
@@ -210,7 +196,7 @@
                                                     <select class="form-control" id="movement_sheet_currency" name="movement_sheet_currency">
                                                         <option value="">Select Currency</option>
                                                         @foreach($get_currency as $key => $value)
-                                                        <option value="{{ $value['id']}}">{{ $value['name']}}</option>
+                                                        <option value="{{ $value['id']}}" {{$key==0 ? 'selected':''}}>{{ $value['name']}}</option>
                                                         @endforeach
                                                     </select>
                                             </div>
@@ -228,7 +214,7 @@
                                                     <select class="form-control" id="road_toll_currency" name="road_toll_currency">
                                                         <option value="">Select Currency</option>
                                                         @foreach($get_currency as $key => $value)
-                                                        <option value="{{ $value['id']}}">{{ $value['name']}}</option>
+                                                        <option value="{{ $value['id']}}" {{$key==0 ? 'selected':''}}>{{ $value['name']}}</option>
                                                         @endforeach
                                                     </select>
                                             </div>
@@ -243,10 +229,10 @@
                                     <div class="col-md-5">
                                         <div class="form-group mb-3 {{ $errors->has('truck') ? 'has-danger' : '' }}">
                                             <label class="col-form-label">Select Truck*</label>
-                                            <select class="form-control" id="truck" name="truck[]">
+                                            <select class="form-control trucker" id="truck" name="truck[]">
                                                 <option value="">Select Truck</option>
                                                 @foreach($get_trucks as $key => $trucks)
-                                                <option value="{{ $trucks['id']}}">{{ $trucks['brand']}}</option>
+                                                <option value="{{ $trucks['id']}}">{{ $trucks['brand'].' - '.$trucks['plate_number']}}</option>
                                                 @endforeach
                                             </select>
                                             @error('truck')
@@ -278,11 +264,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <main>
                                     
                                 </main>
+                                <p class="same_data text-danger"></p>
                                 <div class="card-footer"> <button type="submit"
-                                        class="btn btn-primary">{{$common['button']}}</button> </div>
+                                        class="btn btn-primary" onclick="return validator();">{{$common['button']}}</button> </div>
                             </form>
                         </div>
                     </div>
@@ -292,16 +280,81 @@
     </section>
 </div>
 @endsection
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-    $('#addmorebtn').click(function(){
-        $('main').append('<div class="align-items-end myparent row"><div class=col-md-5><div class="form-group mb-3"><label class=col-form-label>Select Truck*</label> <select class=form-control id=truck name=truck[]><option value="">Select Truck</option>@foreach($get_trucks as $key => $trucks)<option value="{{ $trucks["id"]}}">{{ $trucks["brand"]}}</option>@endforeach</select></div></div><div class=col-md-5><div class="form-group mb-3"><label class=col-form-label>Driver*</label> <select class=form-control id=driver name=driver[]><option value="">Select Driver</option>@foreach($get_drivers as $driver)<option value="{{ $driver["id"]}}">{{ $driver["first_name"]}} {{ $driver["last_name"]}}</option>@endforeach</select></div></div><div class=col-md-2><div class="form-group mb-3"><button class="btn btn-danger deleterow"type=button>Delete</button></div></div></div>');        
-    });
-    $(document).on('click', '.deleterow', function(){
-        $(this).parent().parent().parent().remove();
-    });
-});
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyB5hhlYpfzytLFmZM7H5iw6fvsrWIA_PtY&libraries=places&callback=initAutocomplete" type="text/javascript"></script>
+
+{{-- Autocomplete lat/long for loading location --}}
+<script type="text/javascript">
+
+   google.maps.event.addDomListener(window, 'load', initialize);
+
+       function initialize() {
+           var input = document.getElementById('pac-input');
+           var autocomplete = new google.maps.places.Autocomplete(input);
+           autocomplete.addListener('place_changed', function() {
+               var place = autocomplete.getPlace();
+              $('#lat').val(place.geometry['location'].lat());
+              $('#lng').val(place.geometry['location'].lng());
+
+            // --------- show lat and long ---------------
+            //   $("#lat_area").removeClass("d-none");
+            //   $("#long_area").removeClass("d-none");
+           });
+       }
 </script>
 
+{{-- Autocomplete lat/long for offloading location --}}
+<script type="text/javascript">
+
+   google.maps.event.addDomListener(window, 'load', initialize);
+
+       function initialize() {
+           var input = document.getElementById('pac-input1');
+           var autocomplete = new google.maps.places.Autocomplete(input);
+           autocomplete.addListener('place_changed', function() {
+               var place = autocomplete.getPlace();
+              $('#offloading_location_lat').val(place.geometry['location'].lat());
+              $('#offloading_location_lng').val(place.geometry['location'].lng());
+
+            // --------- show lat and long ---------------
+            //   $("#lat_area").removeClass("d-none");
+            //   $("#long_area").removeClass("d-none");
+           });
+       }
+</script>
+
+<script>
+
+    function validator(){
+        var selectedValues = [];
+        $("select[name='truck[]']").each(function(){
+            selectedValues.push($(this).val());
+        });
+            
+        var uniqueValues = $.grep(selectedValues, function(value, index) {
+            return $.inArray(value, selectedValues) === index;
+        });
+        
+        if(selectedValues.length !== uniqueValues.length) {
+            console.log("There are repeated values in the array.");
+            $('.same_data').text('You cannot select same truck.');
+            return false
+        }else {
+            $('.same_data').empty();
+            console.log("There are no repeated values in the array.");
+            return true
+        }
+    }
+    
+    // add more function for driver and truck
+    $(document).ready(function(){
+
+        $('#addmorebtn').click(function(){
+            $('main').append('<div class="align-items-end myparent row"><div class=col-md-5><div class="form-group mb-3"><label class=col-form-label>Select Truck*</label> <select class=form-control trucker id=truck name=truck[]><option value="">Select Truck</option>@foreach($get_trucks as $key => $trucks)<option value="{{ $trucks["id"]}}">{{ $trucks["brand"].' - '.$trucks["plate_number"]}}</option>@endforeach</select></div></div><div class=col-md-5><div class="form-group mb-3"><label class=col-form-label>Driver*</label> <select class=form-control id=driver name=driver[]><option value="">Select Driver</option>@foreach($get_drivers as $driver)<option value="{{ $driver["id"]}}">{{ $driver["first_name"]}} {{ $driver["last_name"]}}</option>@endforeach</select></div></div><div class=col-md-2><div class="form-group mb-3"><button class="btn btn-danger deleterow"type=button>Delete</button></div></div></div>');  
+        })
+        $(document).on('click', '.deleterow', function(){
+            $(this).parent().parent().parent().remove();
+        }); 
+    });
+
+</script>

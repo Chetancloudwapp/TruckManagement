@@ -13,26 +13,26 @@ use Illuminate\Support\Facades\Validator;
 class PagesController extends Controller
 {
     /* -- privacy index -- */
-    public function index()
+    public function index(Request $request)
     {
-        $common = [];
-        $common['title']         = "Privacy Policy";
-        $common['button']        = "Submit";
-        $get_privacy_policy = PrivacyPolicy::get();
-        return view('admin::privacypolicy.index', compact('common','get_privacy_policy'));
+        
+        $common             = [];
+        $common['title']    = "Privacy Policy";
+        $common['button']   = "Update";
+        $privacy_policies = PrivacyPolicy::first();
+        // return view('admin::privacypolicy.index', compact('common','get_privacy_policy'));
+        return view('admin::privacypolicy.editPrivacyPolicies', compact('common','privacy_policies'));
+
     }
 
     /* -- edit privacy policy --*/
     public function editPrivacyPolicy(Request $request, $id)
     {
-        $common = [];
-        $common['title']         = "Privacy Policy";
-        $common['heading_title'] = "Edit Privacy Policy";
-        $common['button']        = "Update";
-        $message = "Privacy Policy Update Successfully!";
-        $id = decrypt($id);
-        $privacy_policies = PrivacyPolicy::findOrFail($id);
-        
+        // decrypt the id 
+        $id = base64_decode($id);
+
+        // find the privacy policy and then update it 
+        $privacy_policies  = PrivacyPolicy::findOrFail($id);
         if($request->isMethod('post')){
             $data = $request->all();
             
@@ -45,34 +45,32 @@ class PagesController extends Controller
             if($validator->fails()){
                 return back()->withErrors($validator)->withInput();
             }
-            
+
             $privacy_policies->title = $data['title'];
             $privacy_policies->description = $data['description'];
             $privacy_policies->save();
-            return redirect('admin/privacy-policy')->with('success_message', $message);
+            return redirect('admin/privacy-policy')->with('success_message', 'Privacy Policy Updated Successfully!');
         }
-        return view('admin::privacypolicy.editPrivacyPolicies', compact('common','privacy_policies'));
     }
 
     /* --- tnc index -- */
     public function tncIndex()
     {
-        $common = [];
-        $common['title']         = "Terms and Conditions";
-        $common['button']        = "Submit";
-        $get_tnc = TermsandCondition::get();
-        return view('admin::termsandconditions.index', compact('common','get_tnc'));
+        $common           = [];
+        $common['title']  = "Terms and Conditions";
+        $common['button'] = "Update";
+        $tnc = TermsandCondition::first();
+        // return view('admin::termsandconditions.index', compact('common','get_tnc'));
+        return view('admin::termsandconditions.editTnc', compact('common','tnc'));
     }
 
      /* -- edit tnc --*/
     public function editTnc(Request $request, $id)
     {
-        $common = [];
-        $common['title']         = "Terms and Conditions";
-        $common['heading_title'] = "Edit Terms and Conditions";
-        $common['button']        = "Update";
-        $message = "Terms and Conditions Update Successfully!";
-        $id = decrypt($id);
+        // decrypt the id 
+        $id = base64_decode($id);
+
+        // find tnc and then edit it 
         $tnc = TermsandCondition::findOrFail($id);
         
         if($request->isMethod('post')){
@@ -91,40 +89,8 @@ class PagesController extends Controller
             $tnc->title = $data['title'];
             $tnc->description = $data['description'];
             $tnc->save();
-            return redirect('admin/terms-and-conditions')->with('success_message', $message);
+            return redirect('admin/terms-and-conditions')->with('success_message', 'Terms and Conditions Updated Successfully!');
         }
-        return view('admin::termsandconditions.editTnc', compact('common','tnc'));
     }
 
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('admin::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('admin::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

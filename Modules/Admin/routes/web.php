@@ -67,18 +67,20 @@ Route::prefix('admin')->group(function(){
         // Reports
         Route::get('/office-expense-report-index', 'ReportsController@OfficeExpIndex');
         Route::get('/office-expense-report-view/{id}', 'ReportsController@ViewOfficeExpense');
-        
+
+        Route::get('/reports', 'ReportsController@MainReports');
+        Route::match(['get','post'], '/trip-expense-export', 'ReportsController@TripExpenseExport');
         
         // privay-policy
         Route::match(['get','post'], '/privacy-policy', 'PagesController@index');
         Route::match(['get','post'], '/privacy-policy/edit/{id}', 'PagesController@editPrivacyPolicy');
 
         // terms-n-conditions
-        Route::match(['get','post'], '/terms-and-conditions', 'PagesController@tncIndex');
+        Route::get('/terms-and-conditions', 'PagesController@tncIndex');
         Route::match(['get','post'], '/terms-and-conditions/edit/{id}', 'PagesController@editTnc');
 
         // trips
-        Route::match(['get','post'], '/trips', 'TripController@index');
+        Route::get('/trips', 'TripController@index');
         Route::match(['get','post'], '/trips/add', 'TripController@addTrips');
         Route::match(['get','post'], '/trips/edit/{id}', 'TripController@editTrips');
         Route::match(['get','post'], '/trips/delete/{id}','TripController@destroy');
@@ -86,6 +88,7 @@ Route::prefix('admin')->group(function(){
         // pending trips
         Route::match(['get','post'], '/pending-trips', 'TripController@PendingTripIndex');
         Route::match(['get','post'], '/pending-trips/view/{id}', 'TripController@viewPendingTrip');
+        Route::match(['get','post'], '/pending-trips/edit/{id}', 'TripController@editPendingTrip');
         
         // Ongoing trips
         Route::match(['get','post'], '/ongoing-trips', 'TripController@OngoingTripIndex');
@@ -94,6 +97,7 @@ Route::prefix('admin')->group(function(){
         // completed trips
         Route::match(['get','post'], '/completed-trips', 'TripController@CompletedTripIndex');
         Route::match(['get','post'], '/completed-trips-view/{id}', 'TripController@viewCompletedTrip');
+
     });
 });
 

@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-class Helper{
+class Helpers{
     public static function sendNotification()
     {
         $serverKey = 'AAAAwjdLfl0:APA91bFj3Hp9dv3ZBVrR5hfWM9_s3YPCZiiwxMHoDzmXt1o-RhwEojWyvDrsGqNM69jO4QToiMzSWdZVxWFfzpWFh1NH26mP-kdZrxhLv6DPcd8j8OBpS8PZEv66rF7XUBZ9JVh_4fqh'; 

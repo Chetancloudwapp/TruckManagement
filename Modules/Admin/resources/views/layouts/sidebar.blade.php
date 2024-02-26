@@ -21,6 +21,16 @@
                         <p>Drivers</p>
                     </a> 
                 </li>
+                <li class="nav-item"> 
+                    <a href="{{ url('admin/office-expense')}}" class="nav-link {{ Request::is('admin/office-expense') || Request::is('admin/office-expense-add/add') ? 'active' : ''}}"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;
+                        <p>Office Expense</p>
+                    </a> 
+                </li>
+                <li class="nav-item"> 
+                    <a href="{{ url('admin/reports')}}" class="nav-link {{ Request::is('admin/reports') ? 'active' : ''}}"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;
+                        <p>Reports</p>
+                    </a> 
+                </li>
                  <li class="nav-item menu-is-opening menu-open"> 
                     <a href="#" class="nav-link {{ Request::is('admin/change_password') || Request::is('admin/view_profile') || Request::is('admin/edit_profile')? 'active' : ''}}"> <i class="fa-solid fa-suitcase-rolling"></i>
                         &nbsp;&nbsp;<p> Trips <i class="fas fa-angle-left right"></i> </p>
@@ -49,26 +59,22 @@
                         
                     </ul>
                 </li>
-                <li class="nav-item"> 
-                    <a href="{{ url('admin/office-expense')}}" class="nav-link {{ Request::is('admin/office-expense') || Request::is('admin/office-expense-add/add') ? 'active' : ''}}"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;
-                        <p>Office Expense</p>
-                    </a> 
-                </li>
+                
                 <li class="nav-item"> 
                     <a href="{{ url('admin/subadmins')}}" class="nav-link {{ Request::is('admin/subadmins') || Request::is('admin/subadmins/add') ? 'active' : ''}}"> <i class="fa-solid fa-users"></i>&nbsp;&nbsp;
                         <p>SubAdmins</p>
                     </a> 
                 </li>
-                <li class="nav-item menu-is-opening menu-open"> 
+                {{-- <li class="nav-item menu-is-opening menu-open"> 
                     <a href="#" class="nav-link {{ Request::is('admin/change_password') || Request::is('admin/view_profile') || Request::is('admin/edit_profile')? 'active' : ''}}"> <i class="fa-solid fa-suitcase-rolling"></i>
                         &nbsp;&nbsp;<p> Reports <i class="fas fa-angle-left right"></i> </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        {{-- <li class="nav-item"> 
+                        <li class="nav-item"> 
                             <a href="{{ url('admin/trips/add')}}" class="nav-link {{ Request::is('admin/trips/add') ? 'active' : ''}}"> <i class="far fa-circle nav-icon"></i>&nbsp;&nbsp;
                                 <p>Monthly expenses</p>
                             </a> 
-                        </li> --}}
+                        </li>
                         <li class="nav-item"> 
                             <a href="{{ url('admin/pending-trips')}}" class="nav-link {{ Request::is('admin/pending-trips') ? 'active' : ''}}"> <i class="far fa-circle nav-icon"></i>
                                 <p> Trip expenses</p>
@@ -79,28 +85,8 @@
                                 <p> Office expense </p>
                             </a> 
                         </li>
-                        {{-- <li class="nav-item"> 
-                            <a href="{{ url('admin/completed-trips')}}" class="nav-link"> <i class="far fa-circle nav-icon"></i>
-                                <p>Repairs reports </p>
-                            </a> 
-                        </li>
-                        <li class="nav-item"> 
-                            <a href="{{ url('admin/completed-trips')}}" class="nav-link"> <i class="far fa-circle nav-icon"></i>
-                                <p>Diesel reports</p>
-                            </a> 
-                        </li> --}}
-                        {{-- <li class="nav-item"> 
-                            <a href="{{ url('admin/completed-trips')}}" class="nav-link"> <i class="far fa-circle nav-icon"></i>
-                                <p>Salary reports</p>
-                            </a> 
-                        </li> --}}
-                        {{-- <li class="nav-item"> 
-                            <a href="{{ url('admin/office-expense')}}" class="nav-link {{ Request::is('admin/office-expense') || Request::is('admin/office-expense-add/add') ? 'active' : ''}}"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;
-                                <p>Office Expense</p>
-                            </a> 
-                        </li> --}}
                     </ul>
-                </li>
+                </li> --}}
                 <li class="nav-item menu-is-opening menu-open"> 
                     <a href="#" class="nav-link {{ Request::is('admin/change_password') || Request::is('admin/view_profile') || Request::is('admin/edit_profile')? 'active' : ''}}"> <i class="fa-solid fa-gear"></i>
                         <p> Settings <i class="fas fa-angle-left right"></i> </p>

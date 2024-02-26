@@ -67,8 +67,6 @@
     <script src="{{ asset('public/assets/plugins/summernote/summernote-bs4.min.js')}}"></script>
    
     <!-- Include jQuery -->
-   
-     
     <script src="{{ asset('public/assets/js/adminlte2167.js?v=3.2.0')}}"></script>
     <script src="{{ asset('public/assets/js/demo.js')}}"></script>
     <script src="{{ asset('public/assets/js/pages/dashboard.js')}}"></script>

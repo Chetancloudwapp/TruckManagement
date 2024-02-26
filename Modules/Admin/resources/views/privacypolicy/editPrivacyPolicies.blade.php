@@ -18,6 +18,14 @@
     </section>
     <section class="content">
         <div class="container-fluid">
+            @if(Session::has('success_message'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success:</strong> {{ Session::get('success_message')}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -26,10 +34,11 @@
                             </h3>
                         </div> --}}
                         <div class="card-body">
-                            <form name="privacy_policiesDetailForm" id="main" 
+                            <form action="{{ url('admin/privacy-policy/edit/'. base64_encode($privacy_policies->id)) }}" name="privacy_policiesDetailForm" id="main" 
                             method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
+                                <input type="hidden" name="id" value="{{ $privacy_policies->id}}">
                                 <div class="col-md-6">
                                     <div class="form-group mb-3 {{ $errors->has('title') ? 'has-danger' : '' }}">
                                         <label class="col-form-label">Title*</label>
@@ -68,5 +77,11 @@
         </div>
     </section>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.alert-dismissible').fadeOut(3000);
+    });
+</script>
 @endsection
 

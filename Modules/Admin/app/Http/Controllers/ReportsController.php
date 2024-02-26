@@ -4,9 +4,13 @@ namespace Modules\Admin\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
-use Modules\Admin\app\Models\OfficeExpense;
+use Modules\Admin\app\Models\{OfficeExpense, Trip, TruckDriver};
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Exports\{GeneralTripReportExport,TripExpensesExport,OfficeExpensesExport,MonthlyExpensesExport};
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Admin\app\Models\Category;
+use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
@@ -31,51 +35,34 @@ class ReportsController extends Controller
         return view('admin::officeExpense.viewOfficeExpense', compact('common','get_office_expense'));        
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    /* -- main reports -- */
+    public function MainReports(Request $request)
     {
-        return view('admin::create');
+        return view('admin::reports.main_reports');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
+    public function TripExpenseExport(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('admin::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('admin::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
+        $fromDate = $request->input('start_date');
+        $toDate   = $request->input('end_date');
+        
+        if($request->general_report =='general_report'){
+           return Excel::download(new GeneralTripReportExport($fromDate,$toDate), 'general_report.xlsx'); 
+        }
+      
+        if($request->general_report =='trip_expenses'){
+           return Excel::download(new TripExpensesExport($fromDate,$toDate), 'trip_expenses.xlsx'); 
+        }
+        
+        
+        if($request->general_report =='office_expenses'){
+           return Excel::download(new OfficeExpensesExport($fromDate,$toDate), 'office_expenses.xlsx'); 
+        }
+        
+        
+        if($request->general_report =='monthly_expenses'){
+           return Excel::download(new MonthlyExpensesExport($fromDate,$toDate), 'monthly_expenses.xlsx'); 
+        }
+        
     }
 }

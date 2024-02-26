@@ -86,7 +86,10 @@
                                                 href="{{ url('admin/pending-trips/view/'. encrypt($pending_trips['id'])) }}">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
-
+                                            <a
+                                                href="{{ url('admin/pending-trips/edit/'. encrypt($pending_trips['id'])) }}">
+                                                <i class="fa-solid fa-pencil"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                     @endforeach

@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\TripApiController;
 Route::post('/login', [AuthController::class, 'UserLogin']);
 Route::get('/privacy-policy', [PagesApiController::class, 'PrivacyPolicy']);
 Route::get('/terms-and-conditions', [PagesApiController::class, 'TermsandConditions']);
+Route::post('/send-verification-email', [AuthController::class, 'VerifyEmail']);
 
 // Authorized Route
 Route::group(['middleware'=>'auth:sanctum'], function(){
@@ -46,4 +47,16 @@ Route::group(['middleware'=>'auth:sanctum'], function(){
     Route::post('/delivery-note', [TripApiController::class, 'deliveryNote']);
     Route::post('/end-trip', [TripApiController::class, 'endTrip']);
 });
+
+// Route::get('/email/verify', function () {
+//     return view('auth.verify-email');
+// })->middleware('auth')->name('verification.notice');
+
+// Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
+
+// Route::post('/email/verification-notification', function (Request $request) {
+//     $request->user()->sendEmailVerificationNotification();
+ 
+//     return back()->with('message', 'Verification link sent!');
+// })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
