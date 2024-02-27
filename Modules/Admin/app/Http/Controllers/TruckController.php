@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Admin\app\Models\Truck;
+use App\Models\AdminsRole;
+use Auth;
 use Illuminate\Support\Facades\Validator;
 
 class TruckController extends Controller
@@ -20,7 +22,22 @@ class TruckController extends Controller
         $common['title'] = "Truck";
         $common['button']= "Submit";
         $trucks = Truck::orderBy('id','desc')->get();
-        return view('admin::trucks.index', compact('common', 'trucks'));
+
+        // Set Admin/Subadmin Permission for Trucks
+        $TruckModuleCount = AdminsRole::where(['subadmin_id' => Auth::guard('admin')->user()->id, 'module' => 'trucks'])->count();
+        $TruckPermission = [];
+        if(Auth::guard('admin')->user()->type == 'admin'){
+            $TruckPermission['view_access']  = 1;
+            $TruckPermission['edit_access']  = 1;
+            $TruckPermission['full_access']  = 1;
+        }else if($TruckModuleCount == 0){
+            $message = "This feature is restricted for you!";
+            return redirect('admin/dashboard')->with('error_message', $message);
+        }else{
+            $TruckPermission = AdminsRole::where(['subadmin_id' => Auth::guard('admin')->user()->id, 'module' => 'trucks'])->first()->toArray();
+            // return $TruckPermission;
+        }
+        return view('admin::trucks.index', compact('common', 'trucks', 'TruckPermission'));
     }
 
     /* --- add truck --- */

@@ -67,13 +67,14 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ url('admin/subadmins/edit/'. encrypt($subadmin['id'])) }}"> 
-                                                <button class="btn btn-primary btn-sm">Edit</button>
+                                                <i class="fa-solid fa-pencil"></i>
                                             </a>
                                             <a href="javascript:void(0)" style="margin-left:0em" record="subadmins/delete"
                                                 record_id="{{ $subadmin['id'] }}" class="confirmDelete" name="subadmin"
                                                 title="Delete subadmin Page"> 
-                                                <button class="btn btn-danger btn-sm">Delete</button>
+                                                <i class="fa-solid fa-trash"></i>
                                             </a>
+                                            <a href="{{ url('admin/update-role/'.$subadmin->id)}}" title="Admin roles"><i class="fas fa-unlock" style='color:#3f6ed3'></i></a>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -86,8 +87,8 @@
         </div>
     </section>
 </div>
-{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
-@push('scripts')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{{-- @push('scripts') --}}
 <script type="text/javascript">
     $(document).ready(function(){
         $(document).on('click', ".confirmDelete", function(){
@@ -137,7 +138,10 @@
             }
             });
         });
+
+        // alert success
+        $('.alert-dismissible').fadeOut(3000);
     });
 </script>
-@endpush
+{{-- @endpush --}}
 @endsection

@@ -75,14 +75,18 @@
                                             <a href="{{ url('admin/truck/view/'. encrypt($truck['id'])) }}"> 
                                                <i class="fa-solid fa-eye"></i> 
                                             </a>
-                                            <a href="{{ url('admin/truck/edit/'. encrypt($truck['id'])) }}"> 
-                                                <i class="fa-solid fa-pencil"></i>
-                                            </a>
-                                            <a href="javascript:void(0)" style="margin-left:0em" record="truck/delete"
-                                                record_id="{{ $truck['id'] }}" class="confirmDelete" name="truck"
-                                                title="Delete truck Page"> 
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>
+                                            @if($TruckPermission['edit_access'] == 1 || $TruckPermission['full_access']  == 1)
+                                                <a href="{{ url('admin/truck/edit/'. encrypt($truck['id'])) }}"> 
+                                                    <i class="fa-solid fa-pencil"></i>
+                                                </a>
+                                            @endif
+                                            @if($TruckPermission['full_access'] == 1)
+                                                <a href="javascript:void(0)" style="margin-left:0em" record="truck/delete"
+                                                    record_id="{{ $truck['id'] }}" class="confirmDelete" name="truck"
+                                                    title="Delete truck Page"> 
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach

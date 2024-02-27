@@ -26,21 +26,23 @@ Route::prefix('admin')->group(function(){
         Route::match(['get','post'], '/dashboard', 'DashboardController@index');
         
         // subadmins
-        Route::match(['get','post'], '/subadmins', 'AdminController@index');
+        Route::get('/subadmins', 'AdminController@index');
         Route::match(['get','post'], '/subadmins/add', 'AdminController@addSubadmin');
         Route::match(['get','post'], '/subadmins/edit/{id}', 'AdminController@editSubadmin');
         Route::match(['get','post'], '/subadmins/delete/{id}', 'AdminController@destroy');
         Route::post('/update-subadmin-status', 'AdminController@UpdateSubadminStatus');
+        Route::match(['get', 'post'], '/update-role/{id}', 'AdminController@updateRole');
+        Route::post('/roles-and-permission', 'AdminController@UpdateRolesAndPermission');
         
         // trucks
-        Route::match(['get','post'], '/truck', 'TruckController@index');
+        Route::get('/truck', 'TruckController@index');
         Route::match(['get','post'], '/truck/add', 'TruckController@addTruck');
         Route::match(['get','post'], '/truck/edit/{id}', 'TruckController@editTruck');
         Route::match(['get','post'], '/truck/view/{id}', 'TruckController@viewTruck');
         Route::match(['get','post'], '/truck/delete/{id}', 'TruckController@destroy');
 
         // drivers
-        Route::match(['get','post'], '/drivers', 'DriverController@index');
+        Route::get('/drivers', 'DriverController@index');
         Route::match(['get','post'], '/drivers/add', 'DriverController@addDriver');
         Route::match(['get','post'], '/drivers/edit/{id}','DriverController@editDriver');
         Route::match(['get','post'], '/drivers/view/{id}', 'DriverController@viewDriver');

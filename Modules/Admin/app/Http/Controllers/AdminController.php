@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Admin\app\Models\Admin;
+use App\Models\AdminsRole;
 use Validator;
 use Auth;
 use Hash;
@@ -166,7 +167,102 @@ class AdminController extends Controller
         }
     }
 
-    /* --- delete driver --- */
+    public function UpdateRolesAndPermission(Request $request)
+    {
+        if($request->ajax()){
+            $data = $request->all();
+            echo "<pre>"; print_r($data); die;
+        }
+    }
+
+    /* --- Update roles and permission for subadmins --- */
+    public function updateRole(Request $request, $id)
+    {
+        if($request->isMethod('post')){
+            // Admin::where('id', $data['subadmin_id'])->update(['status'=>$status]);
+            $data = $request->all();
+            echo "<pre>"; print_r($data); die;
+
+            foreach($data as $key => $value){
+               
+                if(isset($value['view'])){
+                    $view = $value['view'];
+                    // return $view;
+                }else{
+                    $view = 0;
+                }
+                // return $view;
+                
+                if(isset($value['edit'])){
+                    $edit = $value['edit'];
+                }else{
+                    $edit = 0;
+                }
+                if(isset($value['full'])){
+                    $full = $value['full'];
+                }else{
+                    $full = 0;
+                }
+                
+            }
+
+            // Processing each key-value pair in the data
+            foreach ($data as $key => $value) {
+                // Check if the key corresponds to either 'trucks' or 'drivers'
+                if ($key === 'trucks' || $key === 'drivers') {
+                    // Initialize flag to track if a permission has been set to 1
+                    $permissionSet = false;
+                
+                    // Iterate over the truck/driver properties
+                    foreach ($value as $module => $permissions) {
+                        if (in_array('view', $permissions) && in_array('edit', $permissions) && in_array('full', $permissions)) {
+                            $role = new AdminsRole;
+                            $role->subadmin_id = $id;
+                            $role->module = $module;
+                            $role->view_access = true; // Assuming 'view' permission exists
+                            $role->edit_access = true; // Assuming 'edit' permission exists
+                            $role->full_access = true; // Assuming 'full' permission exists
+                            $role->save();
+                        }
+                    }
+                    
+                    
+                }
+                
+            }
+
+            
+            AdminsRole::where('subadmin_id', $id)->delete();
+
+            $role = new AdminsRole;
+            $role->subadmin_id = $id;
+            $role->module = $key;
+            $role->view_access = $view;
+            // return $role;
+            $role->edit_access = $edit;
+            $role->full_access = $full;
+            // echo "<pre>"; print_r($role->toArray()); die;
+            $role->save();
+
+            // Delete all earlier roles for subadmins
+            
+
+            $message = "Subadmin Roles Updated Successfully!";
+            return redirect()->back()->with('success_message', $message);
+        }
+
+        $subadminRoles = AdminsRole::where('subadmin_id', $id)->get()->toArray();
+       // echo "<pre>"; print_r($subadminRoles); die;
+
+        $subadminDetails = Admin::where('id', $id)->first();
+        // return $subadminDetails;
+        // $title = "Update ".$subadminDetails['name']." Subadmin Roles/Permission";
+        // dd($subadminRoles);
+        return view('admin::subadmins.update_roles')->with(compact('subadminDetails','subadminRoles'));
+        // return view('admin::subadmins.update_roles');
+    }
+
+    /* --- delete subadmins --- */
     public function destroy($id)
     {
         $subadmins = Admin::findOrFail($id)->delete();
